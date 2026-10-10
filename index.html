@@ -1352,7 +1352,7 @@
     const summaryRooms = document.getElementById('summary-rooms');
     const summaryGlazing = document.getElementById('summary-glazing');
 
-    const standardRatePerM2 = 50;
+    const standardRatePerM2 = 80;
     let activeGlazingMultiplier = 1.0;
     let activeGlazingLabel = 'Double Glazed';
 
@@ -1383,7 +1383,7 @@
       priceRangeDisplay.textContent = `€${lowPrice} – €${highPrice}`;
 
       // Update summary text
-      summaryGlazing.textContent = activeGlazingLabel + (activeGlazingMultiplier > 1 ? ' (+20%)' : '');
+      summaryGlazing.textContent = activeGlazingLabel;
 
       // Update selected rooms summary
       const activeBtns = Array.from(document.querySelectorAll('.room-btn.active'));
@@ -1406,7 +1406,7 @@
         btn.classList.add('active', 'border-brand-teal-light', 'bg-brand-teal/40', 'text-white');
         btn.classList.remove('border-brand-slate/40', 'bg-brand-surface', 'text-slate-300');
         
-        activeGlazingMultiplier = parseFloat(btn.dataset.multiplier) || 1.0;
+        activeGlazingMultiplier = btn.dataset.glazing === 'triple' || (btn.dataset.label && btn.dataset.label.includes('Triple')) ? (95 / 80) : 1.0;
         activeGlazingLabel = btn.dataset.label || 'Double Glazed';
         calculateEstimate();
       });
