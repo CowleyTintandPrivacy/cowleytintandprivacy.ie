@@ -1327,35 +1327,32 @@
         handle.style.left = percentage + '%';
       }
 
-      container.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        updateSlider(e.clientX);
-      });
+    
+// Smooth Dragging (Desktop Mouse & Mobile Touch)
+        container.style.touchAction = 'none';
 
-      window.addEventListener('mouseup', () => {
-        isDragging = false;
-      });
+       
+      container.addEventListener('pointerdown', (e) => {
+          isDragging = true;
+          container.setPointerCapture(e.pointerId);
+          updateSlider(e.clientX);
+        });
 
-      window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        updateSlider(e.clientX);
-      });
+        container.addEventListener('pointermove', (e) => {
+          if (!isDragging) return;
+          updateSlider(e.clientX);
+        });
 
-      // Touch Support for Mobile Dragging
-      container.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        if (e.touches && e.touches.length > 0) updateSlider(e.touches[0].clientX);
-      }, { passive: true });
+        const stopDragging = (e) => {
+          if (isDragging) {
+            isDragging = false;
+            try { container.releasePointerCapture(e.pointerId); } catch (_) {}
+          }
+        };
 
-      window.addEventListener('touchend', () => {
-        isDragging = false;
-      });
-
-      window.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        if (e.touches && e.touches.length > 0) updateSlider(e.touches[0].clientX);
-      }, { passive: true });
-
+        container.addEventListener('pointerup', stopDragging);
+        container.addEventListener('pointercancel', stopDragging);
+     
       // Default start at 50%
       overlay.style.clipPath = 'inset(0 50% 0 0)';
       handle.style.left = '50%';
